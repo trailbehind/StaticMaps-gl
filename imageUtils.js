@@ -43,3 +43,31 @@ exports.parseImageFormat = function(format) {
     options: imageOptions
   };
 };
+
+exports.sendImageResponse = function(res, width, height, data, imageFormat) {
+  start = Date.now();
+  const image = sharp(data, {
+    raw: {
+      width: width,
+      height: height,
+      channels: 4
+    }
+  });
+
+  var formattedImage;
+  if (imageFormat.format == "png") {
+    formattedImage = image.png(imageFormat.options);
+  } else if (imageFormat.format == "jpeg") {
+    formattedImage = image.jpeg(imageFormat.options);
+  } else if (imageFormat.format == "webp") {
+    formattedImage = image.webp(imageFormat.options);
+  } else {
+    throw "Unhandled image format " + imageFormat.format;
+  }
+
+  formattedImage.toBuffer(function(err, data, info) {
+    debug("Saving image complete in " + (Date.now() - start) + "ms");
+    res.type(imageFormat.mimetype);
+    res.send(data);
+  });
+};
