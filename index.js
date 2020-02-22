@@ -1,21 +1,31 @@
-const CPUCount = require("os").cpus().length;
 const debug = require("debug")("StaticMaps-gl");
-const genericPool = require("generic-pool");
-const mbgl = require("@mapbox/mapbox-gl-native");
-const request = require("request");
-const sharp = require("sharp");
-const sm = new (require("@mapbox/sphericalmercator"))();
 const express = require("express");
+const getMap = require("./getMap");
+const imageUtils = require("./imageUtils");
+const request = require("request");
+const sm = new (require("@mapbox/sphericalmercator"))();
 
-mbgl.on("message", function(e) {
-  debug("mbgl: ", e);
-  if (e.severity == "WARNING" || e.severity == "ERROR") {
-    console.log("mbgl:", e);
-  }
-});
-debug("simd available: " + sharp.simd(true));
+const mapPool = getMap.getMapPool();
+
+function handleRequest(req, res, width, height, background, format = "png") {
+  const imageFormat = imageUtils.parseImageFormat(format);
+  debug(
+    "image format:" + imageFormat.format + " image options:" + JSON.stringify(imageFormat.options)
+  );
+  res.send("response");
+}
 
 const app = express();
 const port = 3000;
-
 app.listen(port, () => console.log(`StaticMaps-gl listening on port ${port}!`));
+app.get("/:width(\\d+)/:height(\\d+)/:background.:format", function(req, res) {
+  debug(req.params);
+  handleRequest(
+    req,
+    res,
+    parseInt(req.params.width),
+    parseInt(req.params.height),
+    req.params.background,
+    req.params.format
+  );
+});
