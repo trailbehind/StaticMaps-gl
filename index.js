@@ -110,6 +110,8 @@ const app = express();
 app.use(express.json());
 const port = 3000;
 app.listen(port, () => console.log(`StaticMaps-gl listening on port ${port}!`));
+
+// URL that doesn't specify a location, must be a post so location can be based on posted GeoJSON
 app.post("/:width(\\d+)/:height(\\d+)/:background.:format", function(req, res) {
   debug("got request " + JSON.stringify(req.params));
   handleExtentRequest(
@@ -123,6 +125,7 @@ app.post("/:width(\\d+)/:height(\\d+)/:background.:format", function(req, res) {
   );
 });
 
+// URL that specifies a bounds. Zoom will be calculated to fit requested size. Post data is optional.
 app
   .route("/:bounds/:width(\\d+)/:height(\\d+)/:background.:format")
   .get(function(req, res) {
@@ -160,6 +163,7 @@ function handleRequestWithBounds(req, res) {
   );
 }
 
+// URL that specifies a center and zoom. Post data is optional.
 app
   .route("/:zoom/:lon/:lat/:width/:height(\\d+)/:background.:format")
   .get(function(req, res) {
