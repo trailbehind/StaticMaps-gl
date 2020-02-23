@@ -1,13 +1,16 @@
+const turf = require('@turf/turf');
 const debug = require("debug")("StaticMaps-gl");
 const express = require("express");
 const getMap = require("./getMap");
 const imageUtils = require("./imageUtils");
-const request = require("request");
 const sm = new (require("@mapbox/sphericalmercator"))();
 
 const mapPool = getMap.getMapPool();
 
 //TODO: load background options
+const stylePaths = {
+  "topo": "./style.json"
+}
 
 function handleRequest(req, res, width, height, background, extent, format = "png") {
   const imageFormat = imageUtils.parseImageFormat(format);
@@ -22,16 +25,30 @@ function handleRequest(req, res, width, height, background, extent, format = "pn
       }
       debug("Map used " + map.useCount + " times.");
       map.useCount++;
-
-      //TODO: set style
-      //TODO: add overlay
-      var overlayData;
+      debug(map);
+      const overlayData = Object.keys(req.body).length > 0 ? req.body : undefined;
       if (extent == undefined) {
         if (overlayData == undefined) {
           return res.status(400).send("Request must include bounds, or post geojson data.");
         }
-        //TODO: calulate extent from overlay data
+        extent = turf.bbox(overlayData);
       }
+
+      const stylePath = stylePaths[background];
+      if (stylePath === undefined) {
+        return res.status(404).send("Style not found.");
+      }
+      var style = require(stylePath);
+      if(style === undefined) {
+        return res.status(500).send("Failed to load style.");
+      }
+      if(overlayData != undefined) {
+        style.sources["overlay"] = {"type": "geojson", data:overlayData};
+        //TODO: style overlay data
+      }
+
+      map.load(style);
+
       //TODO: calculate zoom
       var zoom = 10;
       const options = {
@@ -89,6 +106,7 @@ function handleRequestWithBounds(req, res) {
 }
 
 const app = express();
+app.use(express.json());
 const port = 3000;
 app.listen(port, () => console.log(`StaticMaps-gl listening on port ${port}!`));
 app.post("/:width(\\d+)/:height(\\d+)/:background.:format", function(req, res) {

@@ -12,6 +12,7 @@
   "dependencies": {
     "@mapbox/mapbox-gl-native": "^4.1.0",
     "@mapbox/sphericalmercator": "^1.1.0",
+    "@turf/turf": "^5.1.6",
     "debug": "^4.1.1",
     "express": "^4.17.1",
     "generic-pool": "^3.7.1",
