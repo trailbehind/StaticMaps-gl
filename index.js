@@ -50,8 +50,7 @@ function handleExtentRequest(req, res, width, height, background, extent, format
     zoom = 15;
   }
   handleRequest(req, res, width, height, background, zoom, center, format);
-};
-
+}
 
 function handleRequest(req, res, width, height, background, zoom, center, format = "png") {
   const imageFormat = imageUtils.parseImageFormat(format);
@@ -161,7 +160,6 @@ function handleRequestWithBounds(req, res) {
   );
 }
 
-
 app
   .route("/:zoom/:lon/:lat/:width/:height(\\d+)/:background.:format")
   .get(function(req, res) {
@@ -175,14 +173,21 @@ function handleRequestWithCoordinates(req, res) {
   const zoom = parseFloat(req.params.zoom);
   const lat = parseFloat(req.params.lat);
   const lon = parseFloat(req.params.lon);
-  if(zoom < 0 || zoom > 20) {
+  if (zoom < 0 || zoom > 20) {
     return res.status(400).send("Zoom must be in range 0-20.");
-  } else if(Math.abs(lat) > maxLat) {
+  } else if (Math.abs(lat) > maxLat) {
     return res.status(400).send("Latitude out of range.");
-  } else if(Math.abs(lon) > maxLon) {
+  } else if (Math.abs(lon) > maxLon) {
     return res.status(400).send("Longitude out of range.");
   }
-  handleRequest(req, res,
+  handleRequest(
+    req,
+    res,
     parseInt(req.params.width),
-    parseInt(req.params.height), req.params.background, zoom, [lon, lat], req.params.format);
+    parseInt(req.params.height),
+    req.params.background,
+    zoom,
+    [lon, lat],
+    req.params.format
+  );
 }
