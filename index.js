@@ -12,6 +12,9 @@ const stylePaths = {
   topo: "./style.json"
 };
 
+const maxLat = 85;
+const maxLon = 180;
+
 function calculateZoom(extent, width, height) {
   for (var zoom = 20; zoom > 0; zoom -= 0.1) {
     const ll = sm.px([extent[0], extent[1]], zoom);
@@ -134,8 +137,7 @@ function handleRequestWithBounds(req, res) {
   debug("got request " + JSON.stringify(req.params));
   const boundsString = req.params.bounds;
   const bounds = boundsString.split(",").map(i => parseFloat(i));
-  const maxLat = 85;
-  const maxLon = 180;
+
   if (bounds.length != 4) {
     return res.status(400).send("Bounds must have 4 values.");
   } else if (
@@ -157,4 +159,30 @@ function handleRequestWithBounds(req, res) {
     bounds,
     req.params.format
   );
+}
+
+
+app
+  .route("/:zoom/:lon/:lat/:width/:height(\\d+)/:background.:format")
+  .get(function(req, res) {
+    handleRequestWithCoordinates(req, res);
+  })
+  .post(function(req, res) {
+    handleRequestWithCoordinates(req, res);
+  });
+
+function handleRequestWithCoordinates(req, res) {
+  const zoom = parseFloat(req.params.zoom);
+  const lat = parseFloat(req.params.lat);
+  const lon = parseFloat(req.params.lon);
+  if(zoom < 0 || zoom > 20) {
+    return res.status(400).send("Zoom must be in range 0-20.");
+  } else if(Math.abs(lat) > maxLat) {
+    return res.status(400).send("Latitude out of range.");
+  } else if(Math.abs(lon) > maxLon) {
+    return res.status(400).send("Longitude out of range.");
+  }
+  handleRequest(req, res,
+    parseInt(req.params.width),
+    parseInt(req.params.height), req.params.background, zoom, [lon, lat], req.params.format);
 }
