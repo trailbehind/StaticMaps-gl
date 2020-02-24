@@ -7,10 +7,11 @@ const mapUtils = require("./mapUtils");
 
 const mapPool = getMap.getMapPool();
 
-//TODO: load background options
-const stylePaths = {
-  topo: "./style.json"
-};
+var args = process.argv.slice(2);
+if (args.length == 0) {
+  throw "Must specify command line argument for background config file.";
+}
+const stylePaths = require(args[0]);
 
 const maxLat = 85;
 const maxLon = 180;
