@@ -45,7 +45,7 @@ exports.parseImageFormat = function(format) {
 };
 
 exports.sendImageResponse = function(res, width, height, data, imageFormat) {
-  start = Date.now();
+  const start = Date.now();
   const image = sharp(data, {
     raw: {
       width: width,

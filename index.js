@@ -46,11 +46,11 @@ function handleExtentRequest(req, res, width, height, background, extent, format
 function handleRequest(req, res, width, height, background, zoom, center, format = "png") {
   const imageFormat = imageUtils.parseImageFormat(format);
 
-  var start = Date.now();
+  const mapPoolStart = Date.now();
   mapPool
     .acquire()
     .then(function(map) {
-      debug("Got map in " + (Date.now() - start) + "ms");
+      debug("Got map in " + (Date.now() - mapPoolStart) + "ms");
       if (map.useCount == undefined) {
         map.useCount = 0;
       }
@@ -80,9 +80,9 @@ function handleRequest(req, res, width, height, background, zoom, center, format
       };
       debug("rendering map with options " + JSON.stringify(options));
 
-      start = Date.now();
+      const renderStart = Date.now();
       map.render(options, (err, data) => {
-        debug("Rendering complete in " + (Date.now() - start) + "ms");
+        debug("Rendering complete in " + (Date.now() - renderStart) + "ms");
         mapPool.release(map);
         if (err) {
           debug("error rendering map: " + err);
