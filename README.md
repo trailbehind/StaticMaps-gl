@@ -10,7 +10,7 @@ Multiple styles are supported, and must be specified with a config file. For an 
 
 Request a map centered on a given coordinate, and a given zoom level.
 /**zoom**/**lon**/**lat**/**width**/**height**/**background**.**format**
-Example `/10.5/45/-111/200/200/default.png`
+Example `/10.5/-111/45/200/200/default.png`
 Post data is optional.
 Zoom levels are based on 512 pixel tiles, so they may be 1 off from expected.
 
