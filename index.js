@@ -3,7 +3,7 @@ const debug = require("debug")("StaticMaps-gl");
 const express = require("express");
 const getMap = require("./getMap");
 const imageUtils = require("./imageUtils");
-const sm = new (require("@mapbox/sphericalmercator"))({ size: 512 });
+const mapUtils = require("./mapUtils");
 
 const mapPool = getMap.getMapPool();
 
@@ -15,20 +15,9 @@ const stylePaths = {
 const maxLat = 85;
 const maxLon = 180;
 
-function calculateZoom(extent, width, height) {
-  for (var zoom = 20; zoom > 0; zoom -= 0.1) {
-    const ll = sm.px([extent[0], extent[1]], zoom);
-    const ur = sm.px([extent[2], extent[3]], zoom);
-    if (ur[0] - ll[0] < width && ll[1] - ur[1] < height) {
-      return zoom;
-    }
-  }
-  return 15;
-}
-
 function handleExtentRequest(req, res, width, height, background, extent, format = "png") {
-  const overlayData = Object.keys(req.body).length > 0 ? req.body : undefined;
   if (extent == undefined) {
+    const overlayData = Object.keys(req.body).length > 0 ? req.body : undefined;
     if (overlayData == undefined) {
       return res.status(400).send("Request must include bounds, or post geojson data.");
     }
@@ -45,7 +34,7 @@ function handleExtentRequest(req, res, width, height, background, extent, format
     }
   }
   const center = [(extent[0] + extent[2]) / 2.0, (extent[1] + extent[3]) / 2.0];
-  var zoom = calculateZoom(extent, width, height);
+  var zoom = mapUtils.calculateZoom(extent, width, height);
   if (zoom > 15) {
     zoom = 15;
   }
@@ -74,10 +63,9 @@ function handleRequest(req, res, width, height, background, zoom, center, format
       if (style === undefined) {
         return res.status(500).send("Failed to load style.");
       }
-      const overlayData = Object.keys(req.body).length > 0 ? req.body : undefined;
-      if (overlayData != undefined) {
-        style.sources["overlay"] = { type: "geojson", data: overlayData };
-        //TODO: style overlay data
+      //empty post body produces an empty dict instead of undefined, so check number of keys
+      if (Object.keys(req.body).length > 0) {
+        style = mapUtils.addOverlayDataToStyle(style, req.body);
       }
 
       map.load(style);
