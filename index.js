@@ -4,7 +4,7 @@ const fs = require("fs");
 const getMap = require("./getMap");
 const imageUtils = require("./imageUtils");
 const mapUtils = require("./mapUtils");
-const turf = require("@turf/turf");
+const bbox = require("@turf/bbox").default;
 
 const mapPool = getMap.getMapPool();
 
@@ -23,7 +23,7 @@ function handleExtentRequest(req, res, width, height, background, extent, format
     if (overlayData == undefined) {
       return res.status(400).send("Request must include bounds, or post geojson data.");
     }
-    extent = turf.bbox(overlayData);
+    extent = bbox(overlayData);
     // buffer extent so data doesnt hit the edge
     const xSpan = extent[2] - extent[0];
     const ySpan = extent[3] - extent[1];
