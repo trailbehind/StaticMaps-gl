@@ -47,8 +47,6 @@ exports.calculateZoom = function(extent, width, height) {
 
 exports.addOverlayDataToStyle = function(style, overlay) {
   style.sources["overlay"] = { type: "geojson", data: overlay };
-  style.layers.push(overlayFillLayerDef);
-  style.layers.push(overlayLineLayerDef);
-  style.layers.push(overlayPointLayerDef);
+  style.layers.push(overlayFillLayerDef, overlayLineLayerDef, overlayPointLayerDef);
   return style;
 };
