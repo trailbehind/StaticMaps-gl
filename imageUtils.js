@@ -39,7 +39,7 @@ exports.parseImageFormat = function(format) {
 
   return {
     format: imageFormat,
-    mimetype: mimetype,
+    mimetype,
     options: imageOptions
   };
 };
@@ -61,8 +61,6 @@ exports.sendImageResponse = function(res, width, height, data, imageFormat) {
     formattedImage = image.jpeg(imageFormat.options);
   } else if (imageFormat.format == "webp") {
     formattedImage = image.webp(imageFormat.options);
-  } else {
-    throw "Unhandled image format " + imageFormat.format;
   }
 
   formattedImage.toBuffer(function(err, data, info) {
