@@ -1,9 +1,10 @@
-const turf = require("@turf/turf");
 const debug = require("debug")("StaticMaps-gl");
 const express = require("express");
+const fs = require("fs");
 const getMap = require("./getMap");
 const imageUtils = require("./imageUtils");
 const mapUtils = require("./mapUtils");
+const turf = require("@turf/turf");
 
 const mapPool = getMap.getMapPool();
 
@@ -60,7 +61,8 @@ function handleRequest(req, res, width, height, background, zoom, center, format
       if (stylePath === undefined) {
         return res.status(404).send("Style not found.");
       }
-      var style = require(stylePath);
+      const styleData = fs.readFileSync(stylePath);
+      var style = JSON.parse(styleData);
       if (style === undefined) {
         return res.status(500).send("Failed to load style.");
       }
