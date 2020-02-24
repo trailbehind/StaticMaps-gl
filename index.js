@@ -45,6 +45,9 @@ function handleExtentRequest(req, res, width, height, background, extent, format
 
 function handleRequest(req, res, width, height, background, zoom, center, format = "png") {
   const imageFormat = imageUtils.parseImageFormat(format);
+  if (imageFormat === undefined) {
+    return res.status(400).send("Invalid image format.");
+  }
 
   const mapPoolStart = Date.now();
   mapPool

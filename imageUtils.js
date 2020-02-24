@@ -18,7 +18,7 @@ exports.parseImageFormat = function(format) {
     mimetype = "image/webp";
     imageFormat = "webp";
   } else {
-    throw "Invalid image format: " + format;
+    return undefined;
   }
 
   if (imageFormat == "jpeg" || imageFormat == "webp") {
