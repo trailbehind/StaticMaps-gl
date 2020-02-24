@@ -21,6 +21,19 @@ const overlayFillLayerDef = {
   }
 };
 
+const overlayPointLayerDef = {
+  id: "overlay-point",
+  type: "circle",
+  source: "overlay",
+  filter: ["==", "$type", "Point"],
+  paint: {
+    "circle-color": ["coalesce", ["get", "marker-color"], "#000000"],
+    "circle-radius": ["coalesce", ["get", "marker-size"], 5],
+    "circle-stroke-color": ["coalesce", ["get", "marker-stroke-color"], "#FFFFFF"],
+    "circle-stroke-width": ["coalesce", ["get", "marker-stroke-width"], 1]
+  }
+};
+
 exports.calculateZoom = function(extent, width, height) {
   for (var zoom = 20; zoom > 0; zoom -= 0.1) {
     const ll = sm.px([extent[0], extent[1]], zoom);
@@ -34,7 +47,8 @@ exports.calculateZoom = function(extent, width, height) {
 
 exports.addOverlayDataToStyle = function(style, overlay) {
   style.sources["overlay"] = { type: "geojson", data: overlay };
-  style.layers.push(overlayLineLayerDef);
   style.layers.push(overlayFillLayerDef);
+  style.layers.push(overlayLineLayerDef);
+  style.layers.push(overlayPointLayerDef);
   return style;
 };
