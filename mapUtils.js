@@ -34,6 +34,18 @@ const overlayPointLayerDef = {
   }
 };
 
+const overlays = [overlayFillLayerDef, overlayLineLayerDef, overlayPointLayerDef];
+
+exports.loadStyles = function(config) {
+  const stylePaths = require(config);
+  let styles = {};
+  for (const key in stylePaths) {
+    let style = require(stylePaths[key]);
+    styles[key] = style;
+  }
+  return styles;
+};
+
 exports.calculateZoom = function(extent, width, height) {
   for (var zoom = 20; zoom > 0; zoom -= 0.1) {
     const ll = sm.px([extent[0], extent[1]], zoom);
@@ -46,7 +58,11 @@ exports.calculateZoom = function(extent, width, height) {
 };
 
 exports.addOverlayDataToStyle = function(style, overlay) {
-  style.sources["overlay"] = { type: "geojson", data: overlay };
-  style.layers.push(overlayFillLayerDef, overlayLineLayerDef, overlayPointLayerDef);
-  return style;
+  return {
+    sources: {
+      ...style["sources"],
+      overlay: { type: "geojson", data: overlay }
+    },
+    layers: [...style["layers"], ...overlays]
+  };
 };

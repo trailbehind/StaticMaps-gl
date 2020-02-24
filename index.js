@@ -12,7 +12,7 @@ var args = process.argv.slice(2);
 if (args.length == 0) {
   throw "Must specify command line argument for background config file.";
 }
-const stylePaths = require(args[0]);
+const styles = mapUtils.loadStyles(args[0]);
 
 const maxLat = 85;
 const maxLon = 180;
@@ -60,14 +60,9 @@ function handleRequest(req, res, width, height, background, zoom, center, format
       debug("Map used " + map.useCount + " times.");
       map.useCount++;
 
-      const stylePath = stylePaths[background];
-      if (stylePath === undefined) {
-        return res.status(404).send("Style not found.");
-      }
-      const styleData = fs.readFileSync(stylePath);
-      var style = JSON.parse(styleData);
+      var style = styles[background];
       if (style === undefined) {
-        return res.status(500).send("Failed to load style.");
+        return res.status(404).send("Invalid background.");
       }
       //empty post body produces an empty dict instead of undefined, so check number of keys
       if (Object.keys(req.body).length > 0) {
