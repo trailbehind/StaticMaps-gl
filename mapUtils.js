@@ -1,5 +1,26 @@
 const sm = new (require("@mapbox/sphericalmercator"))({ size: 512 });
 
+const overlayLineLayerDef = {
+  id: "overlay-line",
+  type: "line",
+  source: "overlay",
+  paint: {
+    "line-width": ["coalesce", ["get", "stroke-width"], 2.0],
+    "line-color": ["coalesce", ["get", "stroke"], "#FF0000"],
+    "line-opacity": ["coalesce", ["get", "stroke-opacity"], 1.0]
+  }
+};
+
+const overlayFillLayerDef = {
+  id: "overlay-fill",
+  type: "fill",
+  source: "overlay",
+  paint: {
+    "fill-color": ["coalesce", ["get", "fill"], "#FF0000"],
+    "fill-opacity": ["coalesce", ["get", "fill-opacity"], 0.6]
+  }
+};
+
 exports.calculateZoom = function(extent, width, height) {
   for (var zoom = 20; zoom > 0; zoom -= 0.1) {
     const ll = sm.px([extent[0], extent[1]], zoom);
@@ -13,6 +34,7 @@ exports.calculateZoom = function(extent, width, height) {
 
 exports.addOverlayDataToStyle = function(style, overlay) {
   style.sources["overlay"] = { type: "geojson", data: overlay };
-  // TODO: add style layers
+  style.layers.push(overlayLineLayerDef);
+  style.layers.push(overlayFillLayerDef);
   return style;
 };
