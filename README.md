@@ -9,7 +9,7 @@ Multiple styles are supported, and must be specified with a config file. For an 
 ### Zoom and Center coordinates
 
 Request a map centered on a given coordinate, and a given zoom level.
-/**zoom**/**lon**/**lat**/**width**/**height**/**background**.**format**
+/**zoom**/**lon**/**lat**x**width**/**height**/**background**.**format**
 Example `/10.5/-111/45/200/200/default.png`
 Post data is optional.
 Zoom levels are based on 512 pixel tiles, so they may be 1 off from expected.
@@ -17,7 +17,7 @@ Zoom levels are based on 512 pixel tiles, so they may be 1 off from expected.
 ### Bounds
 
 Request a map of a specific geographic region.
-"/**bounds**/**width**/**height**/**background**.**format**"
+"/**bounds**/**width**x**height**/**background**.**format**"
 Bounds is in the formal W,S,E,N.
 Example: `/-110,44,-109,45/100/100/topo.png`
 Post data is optional.
@@ -25,7 +25,7 @@ Post data is optional.
 ### Cover data
 
 Request a map of a region that covers POSTed GeoJSON data.
-Example: `/100/100/topo.png`
+Example: `/100x100/topo.png`
 Post data is required.
 Extent is buffered 10% so data does not touch edges of map.
 
