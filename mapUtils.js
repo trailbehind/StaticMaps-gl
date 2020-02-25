@@ -15,6 +15,7 @@ const overlayFillLayerDef = {
   id: "overlay-fill",
   type: "fill",
   source: "overlay",
+  filter: ["==", "$type", "Polygon"],
   paint: {
     "fill-color": ["coalesce", ["get", "fill"], "#FF0000"],
     "fill-opacity": ["coalesce", ["get", "fill-opacity"], 0.6]
