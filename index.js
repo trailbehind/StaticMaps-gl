@@ -96,7 +96,7 @@ function handleRequest(req, res, width, height, background, zoom, center, format
 }
 
 const app = express();
-app.use(express.json());
+app.use(express.json({ limit: process.env.MAX_BODY_SIZE || "10mb", extended: true }));
 const port = 3000;
 app.listen(port, () => console.log(`StaticMaps-gl listening on port ${port}!`));
 
