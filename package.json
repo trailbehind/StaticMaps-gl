@@ -1,6 +1,6 @@
 {
   "name": "StaticMaps-gl",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Static map rendering with mapbox-gl",
   "keywords": [],
   "main": "./index.js",
