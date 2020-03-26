@@ -16,6 +16,7 @@ function getMap() {
     mode: "static",
     ratio: 1.0,
     request: function(req, callback) {
+      debug("request: " + JSON.stringify(req));
       var start = Date.now();
       var protocol = req.url.split(":")[0];
       if (protocol == "file") {
@@ -29,7 +30,7 @@ function getMap() {
           callback(null, response);
           debug("Request for " + req.url + " complete in " + (Date.now() - start) + "ms");
         });
-      } else {
+      } else if (protocol == "http" || protocol == "https") {
         request(
           {
             url: req.url,
@@ -79,6 +80,9 @@ function getMap() {
             }
           }
         );
+      } else {
+        debug(`request for invalid url: "${req.url}"`);
+        return callback(`request for invalid url: "${req.url}"`);
       }
     }
   });
