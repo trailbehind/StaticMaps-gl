@@ -10,7 +10,7 @@
   },
   "license": "BSD-2-Clause",
   "dependencies": {
-    "@mapbox/mapbox-gl-native": "^4.1.0",
+    "@mapbox/mapbox-gl-native": "^5.0.2",
     "@mapbox/sphericalmercator": "^1.1.0",
     "@turf/bbox": "^6.0.1",
     "debug": "^4.1.1",
