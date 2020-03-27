@@ -10,7 +10,7 @@ Multiple styles are supported, and must be specified with a config file. For an 
 
 Request a map centered on a given coordinate, and a given zoom level.
 /**zoom**/**lon**/**lat**x**width**/**height**/**background**.**format**
-Example `/10.5/-111/45/200/200/default.png`
+Example `/10.5/-111/45/200x200/default.png`
 Post data is optional.
 Zoom levels are based on 512 pixel tiles, so they may be 1 off from expected.
 
@@ -19,7 +19,7 @@ Zoom levels are based on 512 pixel tiles, so they may be 1 off from expected.
 Request a map of a specific geographic region.
 "/**bounds**/**width**x**height**/**background**.**format**"
 Bounds is in the formal W,S,E,N.
-Example: `/-110,44,-109,45/100/100/topo.png`
+Example: `/-110,44,-109,45/100x100/topo.png`
 Post data is optional.
 
 ### Cover data
@@ -52,4 +52,4 @@ For example `.jpg90`
 
 ## Example requests
 
-- `curl -d '{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[-111.37939453125,44.61393394730626]}}' -H 'Content-Type: application/json' http://localhost:3000/100/100/default.png`
+- `curl -d '{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[-111.37939453125,44.61393394730626]}}' -H 'Content-Type: application/json' http://localhost:3000/100x100/default.png`
