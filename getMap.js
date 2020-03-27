@@ -30,7 +30,7 @@ function getMap() {
           callback(null, response);
           debug("Request for " + req.url + " complete in " + (Date.now() - start) + "ms");
         });
-      } else if (protocol == "http" || protocol == "https") {
+      } else if (protocol === "http" || protocol === "https") {
         request(
           {
             url: req.url,
