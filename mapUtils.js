@@ -60,6 +60,8 @@ exports.calculateZoom = function(extent, width, height) {
 
 exports.addOverlayDataToStyle = function(style, overlay) {
   return {
+    glyphs: style["glyphs"] || "",
+    sprints: style["sprites"] || "",
     sources: {
       ...style["sources"],
       overlay: { type: "geojson", data: overlay }
