@@ -2,6 +2,7 @@ const debug = require("debug")("StaticMaps-gl.getMap");
 const genericPool = require("generic-pool");
 const mbgl = require("@mapbox/mapbox-gl-native");
 const request = require("request");
+const fs = require("fs");
 
 mbgl.on("message", function(e) {
   debug("mbgl: ", e);
